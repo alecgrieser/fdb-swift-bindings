@@ -46,6 +46,8 @@ class DatabaseValueTests: XCTestCase {
 			("testCompareValuesWithDescendingValuesReturnsFalse", testCompareValuesWithDescendingValuesReturnsFalse),
 			("testCompareValuesWithPrefixAsFirstReturnsTrue", testCompareValuesWithPrefixAsFirstReturnsTrue),
 			("testCompareValuesWithPrefixAsSecondReturnsFalse", testCompareValuesWithPrefixAsSecondReturnsFalse),
+			("testAppend", testAppend),
+			("testWithSuffix", testWithSuffix),
 		]
 	}
 	
@@ -157,5 +159,29 @@ class DatabaseValueTests: XCTestCase {
 	
 	func testCompareValuesWithPrefixAsSecondReturnsFalse() {
 		XCTAssertFalse(DatabaseValue(string: "Value2") < DatabaseValue(string: "Value"))
+	}
+
+	func testAppend() {
+		let value1 = DatabaseValue(bytes: [0x10, 0x66, 0x14, 0x15])
+		var value2 = DatabaseValue(bytes: [0x10, 0x66])
+		value2.append(DatabaseValue(bytes: [0x14, 0x15]))
+		XCTAssertEqual(value1, value2)
+
+		var value3 = DatabaseValue(bytes: [0x10, 0x66])
+		value3.append(byte: 0x14)
+		value3.append(byte: 0x15)
+		XCTAssertEqual(value1, value3)
+	}
+
+	func testWithSuffix() {
+		let value1 = DatabaseValue(bytes: [0x10, 0x66, 0x14, 0x15])
+		let value2 = DatabaseValue(bytes: [0x10, 0x66])
+		XCTAssertEqual(value1, value2.withSuffix(DatabaseValue(bytes: [0x14, 0x15])))
+		XCTAssertEqual(value2, DatabaseValue(bytes: [0x10, 0x66]))
+
+		let value3 = value2.withSuffix(byte: 0x14).withSuffix(byte: 0x15)
+		XCTAssertEqual(value1, value3)
+		XCTAssertEqual(value2, DatabaseValue(bytes: [0x10, 0x66]))
+
 	}
 }

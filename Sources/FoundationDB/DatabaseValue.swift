@@ -134,6 +134,52 @@ public struct DatabaseValue: Equatable, Hashable, Comparable, ExpressibleByStrin
 			}
 		}
 	}
+
+	/**
+	Add the contents of another database value to the end of this one.
+
+	- parameter value:		The value to append to the end of this value.
+	*/
+	public mutating func append(_ value: DatabaseValue) {
+		data.append(value.data)
+	}
+
+	/**
+	Add a byte to the end of this value.
+
+	- parameter byte:		The byte to append to the end of this value.
+	*/
+	public mutating func append(byte: UInt8) {
+		data.append(byte)
+	}
+
+	/**
+	Create a new database value which contains the contents of this
+	database value concatenated with the provided database value.
+
+	- parameter suffix:		The suffix to add to the end of the returned value.
+	- returns:				A concatentation of this value and the provided suffix.
+	*/
+	public func withSuffix(_ suffix: DatabaseValue) -> DatabaseValue {
+		var newData = Data(capacity: data.count + suffix.data.count)
+		newData.append(data)
+		newData.append(suffix.data)
+		return DatabaseValue(newData)
+	}
+
+	/**
+	Create a new database value which contains the contents of this
+	database value but with the given byte appended to the end.
+
+	- parameter suffix:		The suffix byte to add to the end of the returned value.
+	- returns:				A concatentation of this value and the provided suffix.
+	*/
+	public func withSuffix(byte: UInt8) -> DatabaseValue {
+		var newData = Data(capacity: data.count + 1)
+		newData.append(data)
+		newData.append(byte)
+		return DatabaseValue(newData)
+	}
 }
 
 /**

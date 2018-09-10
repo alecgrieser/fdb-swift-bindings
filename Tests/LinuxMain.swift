@@ -31,6 +31,7 @@ XCTMain([
 	testCase(InMemoryTransactionTests.allTests),
 	testCase(KeySelectorTests.allTests),
 	testCase(ResultSetTests.allTests),
+	testCase(SubspaceTests.allTests),
 	testCase(TransactionTests.allTests),
 	testCase(TupleTests.allTests),
 	testCase(TupleTransactionTests.allTests),
