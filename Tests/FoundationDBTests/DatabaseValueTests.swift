@@ -106,13 +106,13 @@ class DatabaseValueTests: XCTestCase {
 	func testIncrementCanCarryIntoEarlierBytes() {
 		var key = DatabaseValue(bytes: [1,2,0xFF,0xFF])
 		key.increment()
-		XCTAssertEqual(key, DatabaseValue(bytes: [1,3,0,0]))
+		XCTAssertEqual(key, DatabaseValue(bytes: [1,3]))
 	}
 	
 	func testIncrementWithMaxValueWrapsToZero() {
 		var key = DatabaseValue(bytes: [0xFF,0xFF,0xFF,0xFF])
 		key.increment()
-		XCTAssertEqual(key, DatabaseValue(bytes: [0,0,0,0]))
+		XCTAssertEqual(key, DatabaseValue(bytes: []))
 	}
 	
 	func testValuesWithSameDataAreEqual() {

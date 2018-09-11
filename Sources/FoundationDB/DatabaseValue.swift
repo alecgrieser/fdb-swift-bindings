@@ -112,13 +112,16 @@ public struct DatabaseValue: Equatable, Hashable, Comparable, ExpressibleByStrin
 	}
 	
 	/**
-	This method increments the last byte in this data.
+	This increments the value so that it produces the lexicographically least
+	database value that does not contain the current value as a prefix.
 	
-	If the last byte is 0xFF, this will wrap it around to 0x00 and increment
-	the prior byte.
+	If the last byte is 0xFF, this will remove that byte and move
+	on to the next byte. If the string contains only 0xFF bytes, then
+	this returns the empty value.
 	*/
 	public mutating func increment() {
 		let indices = self.data.indices.reversed()
+		var trailingFFs = 0
 		self.data.withUnsafeMutableBytes {
 			(bytes: UnsafeMutablePointer<UInt8>) -> Void in
 			for index in indices {
@@ -129,9 +132,12 @@ public struct DatabaseValue: Equatable, Hashable, Comparable, ExpressibleByStrin
 					return
 				}
 				else {
-					pointer.pointee = 0
+					trailingFFs += 1
 				}
 			}
+		}
+		if trailingFFs > 0 {
+			self.data.removeLast(trailingFFs)
 		}
 	}
 }
