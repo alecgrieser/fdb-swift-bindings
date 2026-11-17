@@ -18,7 +18,12 @@
  * limitations under the License.
  */
 
-import Foundation
+#if os(Linux)
+    @preconcurrency import Foundation
+#else
+    import Foundation
+#endif
+
 import FoundationDB
 
 // Entry point - using RunLoop to keep the process alive
