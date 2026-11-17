@@ -80,6 +80,9 @@ jobs:
         sparse-checkout: bindings
         fetch-depth: 1
 
+    - name: Register the Swift tester (FDB releases before 8.0.0 do not know about it)
+      run: python3 .github/scripts/add_swift_tester.py "${FDB_SRC}/bindings/bindingtester/known_testers.py"
+
     - name: Setup FoundationDB
       id: fdb
       uses: ./.github/actions/setup-fdb
